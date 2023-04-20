@@ -1,5 +1,11 @@
 from GeneticSolver import GeneticSolverClass
 
-solver = GeneticSolverClass(100, 10, 0.05)
-solver.initialise()
-print(solver.onePointCrossover("1111111111", "0000000000"))
+size = 100
+length = 10
+mutationRate = 0.1
+crossoverRate = 0.75
+generations = 50
+solver = GeneticSolverClass(size, length, mutationRate, crossoverRate, generations)
+solver.begin()
+
+

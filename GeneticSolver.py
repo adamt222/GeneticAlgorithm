@@ -1,14 +1,18 @@
 import random
+import math
+import matplotlib.pyplot as plt
+
 
 class GeneticSolverClass:
 
-    def __init__(self, size=100, length=10, mutationRate=0.05, crossoverRate=0.75):
+    def __init__(self, size=100, length=10, mutationRate=0.05, crossoverRate=0.75, numberOfGenerations=500):
         self.population = []
         self.newPopulation = []
         self.size = size 
         self.length = length
         self.mutationRate = mutationRate
         self.crossoverRate = crossoverRate
+        self.numberOfGenerations = numberOfGenerations
 
     def initialise(self):
         for _ in range(self.size):
@@ -31,13 +35,21 @@ class GeneticSolverClass:
             newString = ''.join(sample)
             self.population[sampleIndex] = newString
 
-    def Crossover(self):
-        crossoverNumber = self.size * self.crossoverRate
-        weights = []
+    def crossover(self, newPopulation):
+        crossoverNumber = int(self.size * self.crossoverRate)
+        weights = [self.costFunction(x) for x in self.population]
         for _ in range(crossoverNumber):
-            parent1 = random.choice(self.population , weights = weights)
-            parent2 = random.choice(self.population, weights = weights)
+            parent1 = random.choices(self.population , weights=weights, k=1)[0]
+            parent2 = random.choices(self.population, weights=weights, k=1)[0]
             offspring = self.onePointCrossover(parent1, parent2)
+            newPopulation.append(offspring)
+
+    def bringOver(self, newPopulation):
+        bringOverNumber = int(self.size * (1-self.crossoverRate))
+        weights = [self.costFunction(x) for x in self.population]
+        for _ in range(bringOverNumber):
+            individual = random.choices(self.population , weights=weights, k=1)[0]
+            newPopulation.append(individual)
 
     def onePointCrossover(self, parent1, parent2):
         offspring = ''
@@ -49,11 +61,35 @@ class GeneticSolverClass:
                 offspring += parent2[len(offspring)]
         return offspring
 
-
-
     def costFunction(self, individual):
         number = int(individual, 2)
-        return number
+        number = abs(number*math.sin(number) - math.log10(0.1*number+1))
+        return int(number)
+
+    def begin(self):
+        self.initialise()
+        generation = 0
+        avgFitness = []
+        while generation < self.numberOfGenerations:
+            newPopulation = []
+            self.crossover(newPopulation)
+            self.bringOver(newPopulation)
+            self.population = newPopulation
+            self.mutate()
+            generation += 1
+
+            #print("Max fitness is ", max([self.costFunction(x) for x in self.population]))
+            #print("Size of population is ", len(self.population))
+            avgFitness.append((sum([self.costFunction(x)  for x in self.population])/self.size))
+        plt.plot([i for i in range(self.numberOfGenerations)], avgFitness)
+
+        plt.xlim([0, self.numberOfGenerations+0.5])
+        plt.ylim([0, max(avgFitness)+0.5])
+        plt.xlabel("Generations")
+        plt.ylabel("Average fitness")
+        plt.show()
+
+
 
     def printPopulation(self):
         print(self.population)
