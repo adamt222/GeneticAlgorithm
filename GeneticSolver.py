@@ -85,9 +85,13 @@ class GeneticSolverClass:
         avgFitness = []
         while generation < self.numberOfGenerations:
             newPopulation = []
+            #print("new size is ", len(newPopulation))
             self.crossover(newPopulation)
+            #print("new size is ", len(newPopulation))
             self.bringOver(newPopulation)
+            #print("new size is ", len(newPopulation))
             self.population = newPopulation
+            #print("new size is ", len(newPopulation))
             self.mutate()
             generation += 1
 
