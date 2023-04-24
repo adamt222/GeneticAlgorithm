@@ -84,18 +84,11 @@ class GeneticSolverClass:
         avgFitness = []
         while generation < self.numberOfGenerations:
             newPopulation = []
-            #print("new size is ", len(newPopulation))
             self.crossover(newPopulation)
-            #print("new size is ", len(newPopulation))
             self.bringOver(newPopulation)
-            #print("new size is ", len(newPopulation))
             self.population = newPopulation
-            #print("new size is ", len(newPopulation))
             self.mutate()
             generation += 1
-
-            #print("Max fitness is ", max([self.costFunction(x) for x in self.population]))
-            #print("Size of population is ", len(self.population))
             avgFitness.append((sum([self.objectiveFunction(x)  for x in self.population])/self.size))
         plt.plot([i for i in range(self.numberOfGenerations)], avgFitness)
 
