@@ -25,8 +25,7 @@ class GeneticSolverClass:
 
     def mutate(self):
         # Mutate a portion of the population by flipping one bit
-
-        mutationNumber = int(self.size * self.mutationRate)
+        mutationNumber = math.ceil(self.size * self.mutationRate)
         for _ in range(mutationNumber):
             sampleIndex = random.randint(0,self.size-1)
             sample = list(self.population[sampleIndex])
@@ -41,7 +40,7 @@ class GeneticSolverClass:
     def crossover(self, newPopulation):
         # Create an offspring from parents from a portion of the population
 
-        crossoverNumber = int(self.size * self.crossoverRate)
+        crossoverNumber = math.ceil(self.size * self.crossoverRate)
         weights = [self.objectiveFunction(x) for x in self.population]
         for _ in range(crossoverNumber):
             parent1 = random.choices(self.population , weights=weights, k=1)[0]
@@ -52,7 +51,7 @@ class GeneticSolverClass:
     def bringOver(self, newPopulation):
         # Bring over a portion of the population to the new generation according to their fitness
 
-        bringOverNumber = int(self.size * (1-self.crossoverRate))
+        bringOverNumber = math.ceil(self.size * (1-self.crossoverRate))
         weights = [self.objectiveFunction(x) for x in self.population]
         for _ in range(bringOverNumber):
             individual = random.choices(self.population , weights=weights, k=1)[0]
@@ -74,7 +73,7 @@ class GeneticSolverClass:
         # Evaluate an individual with the objective function
 
         number = int(individual, 2)
-        number = abs(number*math.sin(number) - math.log10(0.1*number+1))
+        number = abs(number*math.sin(number) - math.log10(100*number+1))
         return int(number)
 
     def begin(self):
