@@ -90,6 +90,7 @@ class GeneticSolverClass:
             self.mutate()
             generation += 1
             avgFitness.append((sum([self.objectiveFunction(x)  for x in self.population])/self.size))
+        print("Max fitness is ", max([self.objectiveFunction(x)  for x in self.population]))
         plt.plot([i for i in range(self.numberOfGenerations)], avgFitness)
 
         plt.xlim([0, self.numberOfGenerations+0.5])
